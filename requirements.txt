@@ -2,4 +2,5 @@
 django~=4.2.3
 django-bootstrap5>=24.2
 faker
-environ
+psycopg2-binary
+django-environ
