@@ -3,4 +3,4 @@ django~=4.2.3
 django-bootstrap5>=24.2
 faker
 psycopg2-binary
-django-environ
+python-dotenv
