@@ -1,0 +1,139 @@
+<style>
+    /* Style for floating icon */
+    .floating-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 1000;
+    }
+  
+    /* Style for modal */
+    modal-dialog {
+      margin: 50%;
+    }
+  </style>
+  <div class="floating-icon" id="package-icon">
+    <i class="bi bi-box-arrow-up-right" style="line-height: 50px"></i>
+  </div>
+  
+  <div
+    class="modal fade"
+    id="packageModal"
+    tabindex="-1"
+    aria-labelledby="packageModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="packageModalLabel">About App</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  About me
+                </button>
+              </h2>
+              <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Hari Krishna Anem</li>
+                    <li class="list-group-item">Mobile - 9885699666</li>
+                    <li class="list-group-item">
+                      Email - anemharikrishna@gmail.com
+                    </li>
+                    <li class="list-group-item">
+                      <a
+                        href="https://www.linkedin.com/in/anemharikrishna/"
+                        target="_blank"
+                        >LinkedIn</a
+                      >
+                    </li>
+                    <li class="list-group-item">
+                      <a
+                        href="https://github.com/HariKrishna-9885699666/"
+                        target="_blank"
+                        >Github</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
+                >
+                  Packages used
+                </button>
+              </h2>
+              <div
+                id="collapseTwo"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingTwo"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Django</li>
+                    <li class="list-group-item">Bootstrap5</li>
+                    <li class="list-group-item">PostgreSQL</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Show modal when icon is clicked
+    document
+      .getElementById("package-icon")
+      .addEventListener("click", function () {
+        var myModal = new bootstrap.Modal(
+          document.getElementById("packageModal")
+        );
+        myModal.show();
+      });
+  </script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+  />
+  

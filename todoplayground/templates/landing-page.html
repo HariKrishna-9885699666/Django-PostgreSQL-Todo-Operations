@@ -1,0 +1,140 @@
+{% load django_bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Django - PostgreSQL CRUD Operations - To do</title>
+    {% bootstrap_css %}
+    <style>
+      .disabled-div {
+          opacity: 0.5; /* Make the div look disabled */
+          pointer-events: none; /* Disable all interactions within the div */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Image and text -->
+    <nav class="navbar navbar-light bg-white" style="display: flex;justify-content: center;">
+      <a class="navbar-brand" href="/">
+        <img src="{% static 'assets/images/django-logo-positive.png' %}" width="200" height="75" class="d-inline-block align-top" alt="django">
+        <img src="{% static 'assets/images/postgresql.png' %}" width="200" height="75" class="d-inline-block align-top" alt="postgresql">
+        <img src="{% static 'assets/images/todo.png' %}" width="200" height="75" class="d-inline-block align-top" alt="todo">
+      </a>
+    </nav>
+    <div class="container mt-5">
+        <h2>Todo List</h2>
+        <form method="post" action="" novalidate autocomplete="off">
+          {% csrf_token %}
+          <div class="row mb-3">
+              <div class="col">
+                  {{ form.task }} 
+              </div>
+              <div class="col-auto align-self-end">
+                  <button type="submit" class="btn btn-primary">{{ is_edit_mode|yesno:"Update,Save" }}</button>
+              </div>
+              {% if form.task.errors %}
+                  <div class="invalid-feedback d-block">
+                      {{ form.task.errors|first }}
+                  </div>
+              {% endif %}
+              {% if messages %}
+                {% for msg in messages %}
+                  <p class="{% if msg.tags == 'success' %}valid-feedback d-block{% else %}invalid-feedback d-block{% endif %}">{{ msg }}</p>
+                {% endfor %}
+              {% endif %}
+          </div>
+      </form>
+
+      
+        <ul id="todoList" class="list-group mt-3">
+          {% for taskObj in allTasks %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <input type="checkbox" class="form-check-input" id="todoCheckbox-{{ taskObj.id }}" {% if taskObj.completed %}checked{% endif %} onclick="toggleComplete({{ taskObj.id }});">
+              <label class="form-check-label {% if taskObj.completed %}completed-task text-decoration-line-through{% endif %}" for="todoCheckbox-{{ taskObj.id }}">{{ taskObj.task }}</label>
+            </div>
+            <div id="actions-{{ taskObj.id }}" class="{% if taskObj.completed %}disabled-div{% endif %}">
+              <a href="/todos/edit/{{taskObj.id}}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-task-id="{{ taskObj.id }}" data-task-name="{{ taskObj.task }}">
+                <i class="bi bi-trash"></i>
+              </a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete <span id="taskName" style="font-weight: bold;"></span>?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <a href="#" class="btn btn-danger" id="confirmDeleteButton">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+    {% block header %}
+        {% include "floating-icon.html" %}
+    {% endblock %}
+
+    {% bootstrap_javascript %}
+    <script>
+      var deleteModal = document.getElementById('deleteModal')
+      deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var taskId = button.getAttribute('data-task-id')
+        var taskName = button.getAttribute('data-task-name')
+
+        var modalBody = deleteModal.querySelector('.modal-body #taskName')
+        modalBody.textContent = taskName
+
+        var confirmDeleteButton = deleteModal.querySelector('#confirmDeleteButton')
+        confirmDeleteButton.href = "/todos/delete/" + taskId + "/";
+      })
+
+      function toggleComplete(todoId) {
+        // Make an AJAX request to your Django view to update the completed status
+        fetch('/todos/complete/' + todoId + '/', { 
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value 
+          }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Update the checkbox and label styles
+                let checkbox = document.getElementById('todoCheckbox-' + todoId);
+                let actionsDiv = document.getElementById('actions-' + todoId);
+                let label = checkbox.nextElementSibling;
+                if (checkbox.checked) {
+                  label.classList.add('text-decoration-line-through');
+                  actionsDiv.classList.add('disabled-div');
+                } else {
+                  label.classList.remove('text-decoration-line-through');
+                  actionsDiv.classList.remove('disabled-div');
+                }
+            } else {
+                let checkbox = document.getElementById('todoCheckbox-' + todoId);
+                let label = checkbox.nextElementSibling;
+                checkbox.checked = !checkbox.checked;
+                label.classList.toggle('completed-task', checkbox.checked);
+                console.error('Failed to update todo item.');
+            }
+        });
+      }
+    </script>
+  </body>
+</html>
