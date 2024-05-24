@@ -6,7 +6,7 @@ import re
 class TodoItemForm(forms.ModelForm):
     task = forms.CharField(
         min_length=3,
-        max_length=100,
+        max_length=150,
         required=True,
         widget=forms.TextInput(
             attrs={
