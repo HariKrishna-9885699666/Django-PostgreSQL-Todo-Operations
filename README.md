@@ -1,6 +1,10 @@
 # Django-PostgreSQL-Todo-Application
 Django - PostgreSQL Todo Application
 
+## Live Demo
+
+You can check out the live demo of the application here: [Todo Application Demo](https://django-postgresql-todo-operations.onrender.com/)
+
 ## Installation
 
 ```bash
